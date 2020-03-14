@@ -57,6 +57,10 @@ public class TonyController : MonoBehaviour
         {
             NavMeshAgentDestination();
         }
+        else if (_moveMode == MoveMode.NAVMESH_MOVE && when == "Update")
+        {
+            NavMeshAgentMove(_horizontal, _vertical);
+        }
     }
 
     // RB / Cons / Freeze Rotation X, Z ?
@@ -102,11 +106,18 @@ public class TonyController : MonoBehaviour
         }
     }
 
+    void NavMeshAgentMove(float horizontal, float vertical)
+    {
+        _agent.Move(transform.forward * vertical * _speed * Time.deltaTime);
+        _rigidbody.AddTorque(new Vector3(0, horizontal * 0.5f * _speed, 0));
+    }
+
     enum MoveMode
     {
         TRANSFORM_POSITION = 1,
         RB_FORCE = 2,
         RB_POSITION = 3,
-        NAVMESH_DESTINATION = 4
+        NAVMESH_DESTINATION = 4,
+        NAVMESH_MOVE = 5
     }
 }
