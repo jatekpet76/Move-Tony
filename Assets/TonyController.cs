@@ -53,6 +53,10 @@ public class TonyController : MonoBehaviour
         {
             RigidBodyMovePosition(_horizontal, _vertical);
         }
+        else if (_moveMode == MoveMode.NAVMESH_DESTINATION && when == "Update")
+        {
+            NavMeshAgentDestination();
+        }
     }
 
     // RB / Cons / Freeze Rotation X, Z ?
@@ -82,11 +86,27 @@ public class TonyController : MonoBehaviour
         // _rigidbody.AddTorque(new Vector3(0, horizontal * 0.5f * _speed, 0));
     }
 
+    void NavMeshAgentDestination()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                var distance = Vector3.Distance(transform.position, hit.point);
+
+                _agent.destination = hit.point;
+            }
+        }
+    }
+
     enum MoveMode
     {
         TRANSFORM_POSITION = 1,
         RB_FORCE = 2,
         RB_POSITION = 3,
-        NAVMESH_POINT = 4
+        NAVMESH_DESTINATION = 4
     }
 }
